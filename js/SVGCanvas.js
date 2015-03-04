@@ -990,6 +990,8 @@ var SVGCanvas = function(interact, width, height, flexiName, analogName, gifName
             defs.setAttribute('id','definitions');
             var circle = this.circle(2,0,0,"point-handle","#ffffff","0.4","#ffff00","2");
             defs.appendChild(circle);
+	    var rotcircle = this.circle(3,0,0, "point-rotation", "#0066FF", "0.4", "#000000", "2");
+	    defs.appendChild(rotcircle);            
             var linearGradient = this.linearGradient("redGreen","0%", "0%", "0%", "#FF0000", "100%", "100%", "100%", "#00FF00");  
             defs.appendChild(linearGradient);
             this.appendChild(defs);
