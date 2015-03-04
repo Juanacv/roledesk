@@ -13,3 +13,7 @@
     cursor: -ms-grabbing;
     cursor: grabbing;
 }
+.point-rotation {
+    cursor: url("../image/rotate.png") 10 10, auto;
+    touch-action: none;
+}
