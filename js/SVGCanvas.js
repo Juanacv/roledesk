@@ -159,7 +159,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
             var idEl = target.getAttribute('class');
             var groupEl = document.getElementById(idEl);
             groupEl.setAttribute('data-signal', target.options[target.selectedIndex].value);
-            var textEl = document.getElementById(id+clTarget);
+            var textEl = document.getElementById(idEl+clTarget);
             var selText = target.options[target.selectedIndex].text;
             if (textEl) {
             	textEl.textContent = selText;
@@ -666,25 +666,19 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                 id = that.analogName+id;
                 groupSVG = group(id);		
                 groupSVG.setAttribute('data-signal',0);
-                var abox = rect(20,20,145,75,"#FFCC99","1","#000000","2",id+'r');
+                var abox = rect(20,20,95,45,"#FFCC99","1","#000000","2",id+'r');
                 groupSVG.appendChild(abox);
                 
                 var textSVG = text(id+'label');
                 textSVG.setAttribute('transform', ['translate(', 28, 35, ')'].join(' '));
                 textSVG.textContent = 'señal';            
-                groupSVG.appendChild(textSVG);    
-                
-                var textSVG2 = text(id+'text');
-                textSVG2.setAttribute('transform', ['translate(', 28, 58, ')'].join(' '));
-                textSVG2.textContent = 'valor';            
-                groupSVG.appendChild(textSVG2);                
+                groupSVG.appendChild(textSVG);                 
             }
             
-
-            var html = that.selectA.cloneNode(true);
+            var html = that.selectB.cloneNode(true);
             if (html !== undefined) {
                 html.addEventListener('change',function(e) { onChangeAction(e,'label') });
-                addHtml(groupSVG, html, 130,20,28,65,'s');
+                addHtml(groupSVG, html, 130,20,28,40,'s');
             }	
                             
             appendChild(groupSVG);
@@ -865,7 +859,7 @@ var imagen = 0;
 var svgCnv;
 var csele = 0;
 
-function createSelect(id) {
+function createSelect(id, tipo) {
 	var sele = document.createElement('select');
 	sele.name = 'As'+ id;
 	for (i=0; i<8; i++) {
@@ -875,7 +869,7 @@ function createSelect(id) {
 			opt.text = '...';
 		}
 		else {						
-			opt.text = 'Señal ' + i;
+			opt.text = tipo + i;
 		}
 		sele.appendChild(opt);
 	}
@@ -883,8 +877,8 @@ function createSelect(id) {
 }
 
 $(document).ready(function() {
-	var selectA = createSelect(csele); 
-	var selectB = createSelect(csele); 
+	var selectA = createSelect(csele++, "Ataque"); 
+	var selectB = createSelect(csele++, "Defensa"); 
 	svgCnv = new SVGCanvas(window.interact, 1900, 975,'A','C','B','svg-edit','marco',selectA,selectB)
 	$('#svg-edit').css('background-image','url(image/bg1.jpg)');
 	$("#add-line").click(function() { 
