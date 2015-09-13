@@ -14,6 +14,6 @@
     cursor: grabbing;
 }
 .point-rotation {
-    cursor: url("../image/rotate.png") 10 10, auto;
+    cursor: url("../image/rotate.png") 10 10, default;
     touch-action: none;
 }
