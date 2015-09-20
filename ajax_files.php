@@ -26,20 +26,20 @@ function setFile($directory, $input) {
 	$check = getimagesize($source_file);
 	if ($check !== false) {
 		$sizeinpixels = false;
-		if ($input == "back") {
-			if ($check[0] == 1250 && $check[1] == 975) {
+		if ($input === "back") {
+			if ($check[0] <= 1250 && $check[1] <= 975) {
 				$sizeinpixels = true;
 			}
 		}
-		else if ($input == "charac") {
-			if ($check[0] == 60 && $check[1] == 92) {
+		else if ($input === "charac") {
+			if ($check[0] <= 60 && $check[1] <= 92) {
 				$sizeinpixels = true;
 			}
 		}
 		if (!$sizeinpixels) {
 			header('HTTP/1.1 500 Internal Server Error');
         	header('Content-Type: application/json; charset=UTF-8');
-        	die(json_encode(array('message' => 'El tamaño debe la imagen ser 1250x975 para fondos y 90x62 para personajes')));
+        	die(json_encode(array('message' => 'El tamaño de la imagen debe ser 1250x975 para fondos y 90x62 para personajes como máximos')));
 		}
 		else {
 			if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif" ) {
