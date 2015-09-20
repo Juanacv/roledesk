@@ -5,7 +5,7 @@
  */
 //****** SVGCanvas Object
 		
-function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, container, selectA, selectB) {
+function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, container, selectA, selectB, selectC) {
 		'use strict';
 		this.interact = interact;
 		this.flexiName = flexiName;
@@ -19,6 +19,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
 		this.height = height; 
         this.selectA = selectA;
         this.selectB = selectB;
+        this.selectC = selectC;
     	var that = this,
 		svgNS = 'http://www.w3.org/2000/svg',			
 		xns="http://www.w3.org/1999/xlink",
@@ -189,10 +190,6 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
 			that.svg.appendChild(node);
 		}
 	
-		function removeChild(node) {
-			that.svg.removeChild(node);
-		}
-	
 		function applyTransforms(event) {
             that.rootMatrix = that.svg.getScreenCTM();
 
@@ -239,18 +236,18 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                         }
                     },
                     onmove : function (event) {        
-                        var parent = document.getElementById(handleRot.getAttribute('data-parent'));
-                        var center = parent.points.getItem(Math.floor(parent.points.numberOfItems/2));
-                        var centerX = center.x;
-                        var centerY = center.y;
+                        var parent = document.getElementById(handleRot.getAttribute('data-parent')),
+                        center = parent.points.getItem(Math.floor(parent.points.numberOfItems/2)),
+                        centerX = center.x,
+                        centerY = center.y;
                             
                         event.target.x.baseVal.value = event.pageX; 
                         event.target.y.baseVal.value = event.pageY;  
 
                         for (var i = 0; i < parent.points.numberOfItems; i++) {
-                            var point = parent.points.getItem(i);
-                            var radiusP = Math.sqrt(Math.pow(centerX-point.x,2)+Math.pow(centerY -point.y,2));
-                            var useP = document.getElementById(parent.getAttribute('id')+i);                            
+                            var point = parent.points.getItem(i),
+                            radiusP = Math.sqrt(Math.pow(centerX-point.x,2)+Math.pow(centerY -point.y,2)),
+                            useP = document.getElementById(parent.getAttribute('id')+i);                            
                             if (i!==0 && i !== Math.floor(parent.points.numberOfItems/2)) { 
                                 parent.angle += parent.initAngle;
                             }                                                                
@@ -262,8 +259,8 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                                 
                             if (i === 0) {
                                 var foreign = document.getElementById(parent.parentNode.id+'f');
-                                foreign.setAttribute('x',point.x+5);
-                                foreign.setAttribute('y',point.y);
+                                foreign.setAttribute('x',point.x-30);
+                                foreign.setAttribute('y',point.y+5);
                             }                                
                         }
                     },
@@ -272,10 +269,10 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                 }).snap({
                 mode : 'path',
                 paths: [function (x, y) {
-                    var deltaX = x - elementCenter.pageX;
-                    var deltaY = y - elementCenter.pageY;
-                    var angle = Math.atan2(deltaY, deltaX);                        
-                    var parent = document.getElementById(handleRot.getAttribute('data-parent'));
+                    var deltaX = x - elementCenter.pageX,
+                    deltaY = y - elementCenter.pageY,
+                    angle = Math.atan2(deltaY, deltaX),
+                    parent = document.getElementById(handleRot.getAttribute('data-parent'));
                     parent.angle = angle;
                     return {
                         x: elementCenter.pageX + radius * Math.cos(angle),
@@ -336,13 +333,6 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                             node.setAttribute('data-unclon','1');
                     }
                 }					
-            }
-		}
-		
-		function removeNodes(numberOfNodes, parentId) {
-            for (var i = 0; i < numberOfNodes; i++) {				
-                var node = document.getElementById(parentId + i);
-                removeChild(node);
             }
 		}
 	
@@ -498,18 +488,18 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
 
                     if (parent.indexOf(that.flexiName) !== -1) {
                         if (i===0) {
-                            var foreignId = document.getElementById(parent).parentNode.id + 'f';
-                            var foreign = document.getElementById(foreignId);
-                            foreign.setAttribute('x',point.x+5);
-                            foreign.setAttribute('y',point.y);   
+                            var foreignId = document.getElementById(parent).parentNode.id + 'f',
+                            foreignEl = document.getElementById(foreignId);
+                            foreignEl.setAttribute('x',point.x-30);
+                            foreignEl.setAttribute('y',point.y+5);   
                             
                             var useRot = document.getElementById(target.getAttribute('data-parent')+'rot');  
                             if (useRot) {
-                                var target = document.getElementById(useRot.getAttribute('data-parent'));
-                                var center = target.points.getItem(Math.floor(target.points.numberOfItems/2));
-                                var angle = Math.atan2(center.y-point.y,center.x-point.x);                        
-                                var newX = point.x - (10 * Math.cos(angle));                    
-                                var newY = point.y - (10 * Math.sin(angle));
+                                var target = document.getElementById(useRot.getAttribute('data-parent')),
+                                center = target.points.getItem(Math.floor(target.points.numberOfItems/2)),
+                                angle = Math.atan2(center.y-point.y,center.x-point.x),
+                                newX = point.x - (10 * Math.cos(angle)),
+                                newY = point.y - (10 * Math.sin(angle));
                                 useRot.setAttribute('x',newX);
                                 useRot.setAttribute('y',newY);
 
@@ -559,7 +549,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                             newPoint2.y = y;							
                             item.points.insertItemBefore(newPoint2,index);
 
-                            removeNodes(originalNumberOfPoints,parent);
+                            that.removeNodes(originalNumberOfPoints,parent);
                             var handleRot = document.getElementById(item.id+'rot');
                             if (handleRot) {
                                 that.svg.removeChild(handleRot);
@@ -594,7 +584,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                            var indice = 0;
                            var indice = target.getAttribute('data-index');
                            if (parseInt(indice) !== 0 && parseInt(indice) !== (numberOfItems -1)) {
-                               removeNodes(numberOfItems, item.id);
+                               that.removeNodes(numberOfItems, item.id);
                                item.points.removeItem(parseInt(indice));
                                var handleRot = document.getElementById(item.id+'rot');
                                if (handleRot) {
@@ -613,15 +603,15 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                                if (target.parentNode.id.indexOf(that.flexiName) !== -1) {
                                     var parentId = target.parentNode.getAttribute('id');
                                     var flexiLine = document.getElementById(parentId+'pl');
-                                    removeNodes(flexiLine.points.numberOfItems, parentId+'pl');
+                                    that.removeNodes(flexiLine.points.numberOfItems, parentId+'pl');
                                     var rot = document.getElementById(parentId+'plrot')
                                     if (rot) {
                                         that.svg.removeChild(rot);
                                     }
-                                    removeChild(target.parentNode);                                
+                                    that.removeChild(target.parentNode);                                
                                }
                                else {
-                                   removeChild(target.parentNode);
+                                   that.removeChild(target.parentNode);
                                }
                            }
                        }
@@ -630,17 +620,26 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                 });    
         }
         
-    	function toPrint(background) {
-            var svgToPrint = document.getElementById(that.container).cloneNode(true);
-            svgToPrint.firstElementChild.setAttribute('style','');
-            if (background !== undefined) {
-            	svgToPrint.getElementsByTagName('image')[0].setAttribute('xlink:href','../../images/fondos/' + background);
+        this.removeNodes = function(numberOfNodes, parentId) {
+            for (var i = 0; i < numberOfNodes; i++) {				
+                var node = document.getElementById(parentId + i);
+                that.removeChild(node);
             }
+		}
+		
+        this.removeChild = function(node) {
+			that.svg.removeChild(node);
+		}
+		
+    	this.toPrint = function() {
+            var svgToPrint = document.getElementById(that.container).cloneNode(true);
             var nodes = svgToPrint.getElementsByTagName('use');
             var nodesArray = Array.prototype.slice.call(nodes,0);
             for (var i = 0; i < nodesArray.length; i++) {				
                     var node = nodesArray[i];
-                    if (node.classList[0]==="point-handle" || node.classList[0]==="point-rotation") node.parentNode.removeChild(node);
+                    if (node.classList[0]==="point-handle" || node.classList[0]==="point-rotation") {
+                    	node.parentNode.removeChild(node);
+                    }
             }
             var foreigners = svgToPrint.getElementsByTagName('foreignObject');		
             var foreignersArray = Array.prototype.slice.call(foreigners,0);		
@@ -666,23 +665,23 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                 id = that.analogName+id;
                 groupSVG = group(id);		
                 groupSVG.setAttribute('data-signal',0);
-                var abox = rect(20,20,95,45,"#FFCC99","1","#000000","2",id+'r');
+                var abox = rect(20,20,110,35,"#FFCC99","1","#000000","2",id+'r');
                 groupSVG.appendChild(abox);
-                
-                var textSVG = text(id+'label');
-                textSVG.setAttribute('transform', ['translate(', 28, 35, ')'].join(' '));
-                textSVG.textContent = 'señal';            
-                groupSVG.appendChild(textSVG);                 
+                               
             }
             
             var html = that.selectB.cloneNode(true);
             if (html !== undefined) {
                 html.addEventListener('change',function(e) { onChangeAction(e,'label') });
-                addHtml(groupSVG, html, 130,20,28,40,'s');
+                addHtml(groupSVG, html, 130,20,28,25,'s');
             }	
                             
             appendChild(groupSVG);
             addEvents(groupSVG.firstChild);
+            if (groupRecovered) {
+            	var optionNumber = parseInt(groupSVG.getAttribute('data-signal'),10);
+            	groupSVG.querySelector('foreignObject').firstChild.options[optionNumber].selected = 'selected';
+            }
             return groupSVG;
 		}
 	
@@ -696,7 +695,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                 id = that.flexiName+id;
                 groupSVG = group(id);
                 groupSVG.setAttribute('data-signal',0);
-                var flex = polyline("20, 20, 20,260, 260,260", id+'pl',"none","1",primaryColor, "4");
+                var flex = polyline("20, 20, 60,20, 100,20", id+'pl',"none","1",primaryColor, "4");
                 flex.setAttributeNS(null,"stroke-linejoin", "round");
                 flex.setAttribute('data-primary',primaryColor);
                 if (secundaryColor === "") {
@@ -714,18 +713,22 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                 html.addEventListener('change',function(e) { onChangeAction(e)});
                 if (groupRecovered){
                     var point = groupSVG.firstChild.points.getItem(0);
-                    x= point.x + 5;
-                    y = point.y;
+                    x = point.x - 30;
+                    y = point.y + 5;
                 }
                 else {
-                    x = 25;
-                    y = 20;
+                    x = -10;
+                    y = 25;
                 }
                 addHtml(groupSVG, html,100,20,x,y,'s');
             }
             appendChild(groupSVG);
             addHandles(groupSVG.firstChild, false);
             addHandlesEvents(groupSVG.firstChild);
+            if (groupRecovered) {
+            	var optionNumber = parseInt(groupSVG.getAttribute('data-signal'),10);
+            	groupSVG.querySelector('foreignObject').firstChild.options[optionNumber].selected = 'selected';
+            }
             return groupSVG;
 		}
         
@@ -746,12 +749,6 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                 groupSVG = group(id);		
                 groupSVG.setAttribute('data-signal',0);
                 groupSVG.setAttribute('image-source1',src);
-                if (src2) {
-                    groupSVG.setAttribute('image-source2',src2);
-                }
-                else {
-                    groupSVG.setAttribute('image-source2',src);
-                }
                 
                 var fImag = document.createElement('img');
                 fImag.src = src;
@@ -760,67 +757,27 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                 var imgEl = img(id+'img', src, width, height, x, y);  
                 imgEl.class= id;
                 groupSVG.appendChild(imgEl); 
-                if (addText) {
-                    var textSVG = text(id+'text');
-                    textSVG.setAttribute('transform', ['translate(', 90, 207, ')'].join(' '));
-                    textSVG.textContent = 'señal';  
-                    groupSVG.appendChild(textSVG);  
-                    
-                    var textSVG2 = text(id+'text2');
-                    textSVG2.setAttribute('transform', ['translate(', 75, 258, ')'].join(' '));
-                    textSVG2.textContent = 'fecha';  
-                    groupSVG.appendChild(textSVG2);                     
-                }
-                var label = text(id+'label');
-                if (addText) {
-                    label.setAttribute('transform', ['translate(', 48, 180, ')'].join(' '));
-                }
-                else {
-                    label.setAttribute('transform', ['translate(', 20, 35, ')'].join(' '));
-                    label.setAttribute('class','delete');
-                }
-                label.textContent = 'señal';                  
-                groupSVG.appendChild(label);  
             }
                                    
-            var html = that.selectA.cloneNode(true);
+            var html = that.selectC.cloneNode(true);
             if (html !== undefined) {
                 html.addEventListener('change',function(e) { onChangeAction(e,'label') });
                 addHtml(groupSVG, html, 162,20,15,0,'s',2);
             }		
             appendChild(groupSVG);
-            addEvents(groupSVG.children[1]);
+            if (groupRecovered) {
+            	addEvents(groupSVG.children[0]);
+            	var optionNumber = parseInt(groupSVG.getAttribute('data-signal'),10);
+            	groupSVG.querySelector('foreignObject').firstChild.options[optionNumber].selected = 'selected';
+            }
+            else {
+            	addEvents(groupSVG.children[1]);
+            }
             return groupSVG;
 		}	
 		
-        //Constructor
-        if (!document.getElementById(this.id)) {
-            this.svg = document.createElementNS(svgNS, 'svg');
-            this.svg.id = this.id;
-            this.svg.setAttribute('viewBox', '0 0 1900 974');
-            this.svg.setAttribute('width', this.width);
-            this.svg.setAttribute('height', this.height);
-            this.svg.setAttribute('xmlns', svgNS);
-            this.svg.setAttribute('xmlns:xlink',xns);
-            if (typeof  this.container === "undefined") { 
-                    document.body.appendChild(this.svg);
-            }
-            else {
-                    var container = document.getElementById(this.container);
-                    container.appendChild(this.svg);
-            }
-            var defs = document.createElementNS(svgNS, 'defs');	
-            defs.setAttribute('id','definitions');
-            var newCircle = circle(2,0,0,"point-handle","#ffffff","0.4","#ffff00","2");
-            defs.appendChild(newCircle);
-	    	var rotcircle = circle(3,0,0, "point-rotation", "#0066FF", "0.4", "#000000", "2");
-	    	defs.appendChild(rotcircle);            
-            var linearGradient = linearGradient("redGreen","0%", "0%", "0%", "#FF0000", "100%", "100%", "100%", "#00FF00");  
-            defs.appendChild(linearGradient);
-            appendChild(defs);
-        }	
-        else {
-            this.svg = document.getElementById(this.id);
+		this.refresh = function() {
+		    this.svg = document.getElementById(this.id);
             var groups = document.getElementsByTagName('g'),
             groupsArray = Array.prototype.slice.call(groups,0); 
             for (var i =0; i < groupsArray.length; i++) {                
@@ -846,54 +803,38 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                         }
                     }
                 }
-            }  
-
-        }					
-        addGeneralEvents();
+            } 
+            applyTransforms();
+		}
 		
+        //Constructor
+        if (!document.getElementById(this.id)) {
+            this.svg = document.createElementNS(svgNS, 'svg');
+            this.svg.id = this.id;
+            this.svg.setAttribute('viewBox', '0 0 1250 975');
+            this.svg.setAttribute('width', this.width);
+            this.svg.setAttribute('height', this.height);
+            this.svg.setAttribute('xmlns', svgNS);
+            this.svg.setAttribute('xmlns:xlink',xns);
+            if (this.container === undefined) { 
+                document.body.appendChild(this.svg);
+            }
+            else {
+                var container = document.getElementById(this.container);
+                container.appendChild(this.svg);
+            }
+            var defs = document.createElementNS(svgNS, 'defs');	
+            defs.setAttribute('id','definitions');
+            var newCircle = circle(2,0,0,"point-handle","#ffffff","0.4","#ffff00","2");
+            defs.appendChild(newCircle);
+	    	var rotcircle = circle(3,0,0, "point-rotation", "#FF9E5E", "0.4", "#000000", "2");
+	    	defs.appendChild(rotcircle);   
+	    	appendChild(defs);
+        }	
+        else {
+        	this.refresh();
+        }			
+        addGeneralEvents();
 }
 
-var cline = 0;
-var abox = 0;
-var imagen = 0;
-var svgCnv;
-var csele = 0;
 
-function createSelect(id, tipo) {
-	var sele = document.createElement('select');
-	sele.name = 'As'+ id;
-	for (i=0; i<8; i++) {
-		opt = document.createElement('option');
-		opt.value = i;
-		if (i === 0) {
-			opt.text = '...';
-		}
-		else {						
-			opt.text = tipo + i;
-		}
-		sele.appendChild(opt);
-	}
-	return sele;
-}
-
-$(document).ready(function() {
-	var selectA = createSelect(csele++, "Ataque"); 
-	var selectB = createSelect(csele++, "Defensa"); 
-	svgCnv = new SVGCanvas(window.interact, 1900, 975,'A','C','B','svg-edit','marco',selectA,selectB)
-	$('#svg-edit').css('background-image','url(image/bg1.jpg)');
-	$("#add-line").click(function() { 
-		cline++; 	
-		svgCnv.flexyLine(cline, "#29e",'#00ff00'); 
-	});
-	
-	$("#add-rectangle").click(function() { 
-		abox++; 
-		svgCnv.analogBox(abox); 
-	});
-	
-	$("#add-image").click(function() { 
-		imagen++; 
-		svgCnv.imageEle(imagen, false, 'image/character.png', 'image/character.png', 20, 20, 60, 92); 
-	});	
-
-});

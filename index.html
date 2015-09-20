@@ -2,16 +2,49 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>interact.js demo</title>
+		<title>Roledesk demo</title>
 		<meta name="description" content="A small demonstration of interact.js, a drag and drop, resize and multitouch gesture module for modern browsers (and IE8)" />
 		<meta name="author" content="Taye Adeyemi" />
 		<script type="text/javascript" src="js/interact.js"></script>
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script type="text/javascript" src="js/SVGCanvas.js"></script>
+		<script type="text/javascript" src="js/main.js"></script>
 		<link rel="stylesheet" href="css/star.css" type="text/css"/>
 	</head>
 	<body>		
-		<p><button id="add-line" type="button">Línea</button><button id="add-rectangle" type="button">Caja de texto</button><button id="add-image" type="button">Imagen</button>
+		<p><button id="add-line" type="button">Ataque</button><button id="add-rectangle" type="button">Defensa</button><button id="add-image" type="button">Personaje</button><button id="save-template" type="button">Salvar Plantilla</button><input type="text" id="name_template" value="" placeholder="Nombre aquí"></p>
+		<p>
+			<span>Imagen de Personaje</span>
+			<select id="sel_character" name="sel_character">
+				<option value="..">..</option>
+		   </select>
+		</p>
+		<p>
+			<span>Imagen de Fondo</span>
+			<select id="sel_background" name="sel_background">
+				<option value="..">..</option>
+		   </select>
+		</p>
+		<p>
+			<span>Plantillas</span>
+			<select id="sel_plantilla" name="sel_plantilla">
+				<option value="..">..</option>
+		   </select>
+		</p>
+		<p>
+		<form id="character" name="character" action="" method="post" ectype="multipart/form-data">
+			<label>Selecciona imagen de personaje -></label>
+			<input type="file" name="charac" id="charac"/>
+			<input type="submit" value="Subir"/>
+		</form>
+		</p>
+		<p>
+		<form id="background" name="background" action="" method="post" ectype="multipart/form-data">
+			<label>Selecciona imagen de fondo -></label>
+			<input type="file" name="back" id="back"/>
+			<input type="submit" value="Subir"/>
+		</form>
+		</p>
 		<div id="marco"></div>
 	</body>
 </html>
