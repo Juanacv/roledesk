@@ -39,7 +39,7 @@ function setFile($directory, $input) {
 		if (!$sizeinpixels) {
 			header('HTTP/1.1 500 Internal Server Booboo');
         	header('Content-Type: application/json; charset=UTF-8');
-        	die(json_encode(array('message' => 'El tamaño debe ser 1250x975 para fondos y 90x62 para personajes')));
+        	die(json_encode(array('message' => 'El tamaño debe la imagen ser 1250x975 para fondos y 90x62 para personajes')));
 		}
 		else {
 			if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif" ) {
