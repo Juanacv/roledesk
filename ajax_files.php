@@ -4,8 +4,6 @@ $BACKGROUNDS_DIR = "images/background";
 $TEMPLATES_DIR = "templates";
 
 function getFiles($directory) {
-
-
 	$tmp_files = scandir($directory);
 	$files = array();
 
@@ -45,7 +43,7 @@ function setFile($directory, $input) {
 		}
 		else {
 			if($imageFileType == "jpg" || $imageFileType == "png" || $imageFileType == "jpeg" || $imageFileType == "gif" ) {
-				if ($_FILES[$input]["size"] <= 10000000) {
+				if ($_FILES[$input]["size"] <= 6000000) {
 					$j = 0;
 					while (file_exists($target_file)) {
 						$file_arr = explode(".",$base_name);
