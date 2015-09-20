@@ -6,4 +6,6 @@ Attributes saved in the file.
 
 Images used saved
 
-TODO: Maybe add more attributes.
+TODO: Add better look. 
+
+Maybe add more attributes.
