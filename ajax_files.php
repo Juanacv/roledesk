@@ -37,7 +37,7 @@ function setFile($directory, $input) {
 			}
 		}
 		if (!$sizeinpixels) {
-			header('HTTP/1.1 500 Internal Server Booboo');
+			header('HTTP/1.1 500 Internal Server Error');
         	header('Content-Type: application/json; charset=UTF-8');
         	die(json_encode(array('message' => 'El tamaño debe la imagen ser 1250x975 para fondos y 90x62 para personajes')));
 		}
@@ -64,7 +64,7 @@ function setFile($directory, $input) {
 				else {
 					header('HTTP/1.1 500 Internal Server Error');
         			header('Content-Type: application/json; charset=UTF-8');
-        			die('El tamaño del archivo debe ser menor a 5 mb');
+        			die('El tamaño del archivo debe ser menor a 6 mb');
 				}
 			}
 			else {
