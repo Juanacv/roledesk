@@ -568,56 +568,56 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
             })
             .styleCursor(true);	
             
-        that.interact(that.svg).on('dblclick',function(event) { 		   
-                    var target;
-                    if (event.target.correspondingUseElement) {
-                        target = event.target.correspondingUseElement;
+        	that.interact(that.svg).on('dblclick',function(event) { 		   
+                var target;
+                if (event.target.correspondingUseElement) {
+                    target = event.target.correspondingUseElement;
+                }
+                else {
+                    target  = event.target;
+                }
+                if (target.id !== that.id) {
+                    if (target.getAttribute('class') === 'point-handle') {
+                        var parent = target.getAttribute('data-parent');
+                        var item = document.getElementById(parent);
+                        var numberOfItems = item.points.numberOfItems;
+                        var indice = 0;
+                        var indice = target.getAttribute('data-index');
+                        if (parseInt(indice) !== 0 && parseInt(indice) !== (numberOfItems -1)) {
+                            that.removeNodes(numberOfItems, item.id);
+                            item.points.removeItem(parseInt(indice));
+                            var handleRot = document.getElementById(item.id+'rot');
+                            if (handleRot) {
+                                that.svg.removeChild(handleRot);
+                            }
+                            addHandles(item);
+                            redoPoints();
+
+                        }
+                    }
+                    else if (target.getAttribute('class') === 'point-rotation') {
+                        that.svg.removeChild(target);
                     }
                     else {
-                         target  = event.target;
-                     }
-                     if (target.id !== that.id) {
-                        if (target.getAttribute('class') === 'point-handle') {
-                           var parent = target.getAttribute('data-parent');
-                           var item = document.getElementById(parent);
-                           var numberOfItems = item.points.numberOfItems;
-                           var indice = 0;
-                           var indice = target.getAttribute('data-index');
-                           if (parseInt(indice) !== 0 && parseInt(indice) !== (numberOfItems -1)) {
-                               that.removeNodes(numberOfItems, item.id);
-                               item.points.removeItem(parseInt(indice));
-                               var handleRot = document.getElementById(item.id+'rot');
-                               if (handleRot) {
-                                   that.svg.removeChild(handleRot);
-                               }
-                               addHandles(item);
-                               redoPoints();
-
-                           }
-                       }
-                       else if (target.getAttribute('class') === 'point-rotation') {
-                           that.svg.removeChild(target);
-                       }
-                       else {
-                           if (target.parentNode.id !== that.id) {
-                               if (target.parentNode.id.indexOf(that.flexiName) !== -1) {
-                                    var parentId = target.parentNode.getAttribute('id');
-                                    var flexiLine = document.getElementById(parentId+'pl');
-                                    that.removeNodes(flexiLine.points.numberOfItems, parentId+'pl');
-                                    var rot = document.getElementById(parentId+'plrot')
-                                    if (rot) {
-                                        that.svg.removeChild(rot);
-                                    }
-                                    that.removeChild(target.parentNode);                                
-                               }
-                               else {
-                                   that.removeChild(target.parentNode);
-                               }
-                           }
-                       }
+                        if (target.parentNode.id !== that.id) {
+                            if (target.parentNode.id.indexOf(that.flexiName) !== -1) {
+                                var parentId = target.parentNode.getAttribute('id');
+                                var flexiLine = document.getElementById(parentId+'pl');
+                                that.removeNodes(flexiLine.points.numberOfItems, parentId+'pl');
+                                var rot = document.getElementById(parentId+'plrot')
+                                if (rot) {
+                                    that.svg.removeChild(rot);
+                                }
+                                that.removeChild(target.parentNode);                                
+                            }
+                            else {
+                                that.removeChild(target.parentNode);
+                            }
+                        }
                     }
-                    document.body.style.cursor = "default";
-                });    
+                }
+                document.body.style.cursor = "default";
+            });    
         }
         
         this.removeNodes = function(numberOfNodes, parentId) {
