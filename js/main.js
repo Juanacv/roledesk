@@ -97,6 +97,7 @@ $(document).ready(function() {
         		value: file.message,
         		text : file.message 
    		 	}));
+   		 	$("#sel_background option:last-child").attr("selected","selected");
 		})
 		.fail(function(msg) {
 			alert(msg.responseText);
@@ -121,6 +122,7 @@ $(document).ready(function() {
         		value: file.message,
         		text : file.message 
    		 	}));
+   		 	$("#sel_character option:last-child").attr("selected","selected");
 		})
 		.fail(function(msg) {
 			alert(msg.responseText);
@@ -178,6 +180,7 @@ $(document).ready(function() {
         				value: file.message,
         				text : file.message 
    		 			}));
+   		 			$("#sel_plantilla option:last-child").attr("selected","selected");
    		 		}
 			})
 			.fail(function(msg) {
