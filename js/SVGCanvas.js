@@ -208,8 +208,8 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                     onstart: function (event) {
                         var target = document.getElementById(handleRot.getAttribute('data-parent'));
                         if (target.initAngle === null || target.initAngle === undefined) {
-                            var initX = 0, initY = 0;
-                            for (var i = 0; i < target.points.numberOfItems; i++) {
+                            var initX = 0, initY = 0, i = 0, len = target.points.numberOfItems;
+                            while (i < len) {
                                 var point = target.points.getItem(i);
                                 if (i===0) {
                                     initX = point.x;
@@ -231,7 +231,8 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                                         initAngle = (2 * Math.PI) - initAngle;
                                     }                                        
                                     target.initAngle = initAngle;
-                                }                                
+                                } 
+                                i+=1;
                             }
                         }
                     },
@@ -243,8 +244,8 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                             
                         event.target.x.baseVal.value = event.pageX; 
                         event.target.y.baseVal.value = event.pageY;  
-
-                        for (var i = 0; i < parent.points.numberOfItems; i++) {
+						var i = 0, len = parent.points.numberOfItems;
+                        while (i < len) {
                             var point = parent.points.getItem(i),
                             radiusP = Math.sqrt(Math.pow(centerX-point.x,2)+Math.pow(centerY -point.y,2)),
                             useP = document.getElementById(parent.getAttribute('id')+i);                            
@@ -261,7 +262,8 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                                 var foreign = document.getElementById(parent.parentNode.id+'f');
                                 foreign.setAttribute('x',point.x-30);
                                 foreign.setAttribute('y',point.y+5);
-                            }                                
+                            }
+                            i+=1;
                         }
                     },
                     onend  : function (event) {
@@ -284,8 +286,8 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
         }
         
     	function addHandles(item, unclon) {
-            var initY = 0, initX = 0;
-            for (var i = 0, len = item.points.numberOfItems; i < len; i++) {
+            var initY = 0, initX = 0, i = 0, len = item.points.numberOfItems;
+            while (i < len) {
                 var handle = document.createElementNS(svgNS, 'use'),
                 point = item.points.getItem(i),
                 newPoint = that.svg.createSVGPoint(),
@@ -324,14 +326,16 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
 
                 originalPoints.push(newPoint);
                 appendChild(handle);
-
+				i+=1;
             }
             if (unclon) {
-                for (var i = 0; i < item.points.numberOfItems; i++) {				
+            	var i = 0;
+                while (i < item.points.numberOfItems) {				
                     var node = document.getElementById(item.getAttribute('id') + i);
                     if (i % 2 === 0) {
                             node.setAttribute('data-unclon','1');
                     }
+                    i+=1;
                 }					
             }
 		}
@@ -340,14 +344,14 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
             originalPoints = [];
             var nodes = document.getElementsByTagName('use');
             var nodesArray = Array.prototype.slice.call(nodes,0);
-            for (var i =0; i < nodesArray.length; i++) {
-                if (nodesArray[i].class === "point-handle") {
+            nodesArray.forEach(function(node) {
+                if (node.class === "point-handle") {
                     var newPoint = that.svg.createSVGPoint();
-                    newPoint.x = parseFloat(nodesArray[i].getAttribute('x'));
-                    newPoint.y = parseFloat(nodesArray[i].getAttribute('y'));
+                    newPoint.x = parseFloat(node.getAttribute('x'));
+                    newPoint.y = parseFloat(node.getAttribute('y'));
                     originalPoints.push(newPoint);
                 }
-            }
+            });
             that.interact('.point-handle').snap({
                     anchors: originalPoints,
                     range: 10
@@ -398,8 +402,8 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                         foreign.setAttribute('x',x);
                         foreign.setAttribute('y',y);
                     }
-
-                    for (var i = 0; i < target.points.numberOfItems; i++) {
+					var i = 0;
+                    while (i < target.points.numberOfItems) {
                         var point = target.points.getItem(i);
                         var useP = document.getElementById(target.getAttribute('id')+i);
 
@@ -408,7 +412,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
 
                         useP.setAttribute('x', point.x);
                         useP.setAttribute('y', point.y);                                                             
-                         
+                        i +=1;
                     }                    
                     
                     var useRot = document.getElementById(target.getAttribute('id')+'rot');  
@@ -426,8 +430,8 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                     var handleRot = document.getElementById(event.target.getAttribute('id')+'rot');
                     if (handleRot) {
                         var target = event.target;
-                        var newY = 0, newX = 0;
-                        for (var i = 0; i <= Math.floor(target.points.numberOfItems/2); i++) {
+                        var newY = 0, newX = 0, i = 0;
+                        while (i <= Math.floor(target.points.numberOfItems/2)) {
                             var point = target.points.getItem(i);
 
                             if (i === 0) {
@@ -458,6 +462,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                                 var radius = Math.sqrt(Math.pow(elementCenter.pageX-newX,2) + Math.pow((elementCenter.pageY - newY),2));
                                 rotateEvent(handleRot,radius, elementCenter);
                             }
+                            i+=1;
                         } 
                     }
                 }
@@ -621,9 +626,11 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
         }
         
         this.removeNodes = function(numberOfNodes, parentId) {
-            for (var i = 0; i < numberOfNodes; i++) {				
+        	var i = 0;
+            while (i < numberOfNodes) {				
                 var node = document.getElementById(parentId + i);
                 that.removeChild(node);
+                i +=1;
             }
 		}
 		
@@ -635,24 +642,21 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
             var svgToPrint = document.getElementById(that.container).cloneNode(true);
             var nodes = svgToPrint.getElementsByTagName('use');
             var nodesArray = Array.prototype.slice.call(nodes,0);
-            for (var i = 0; i < nodesArray.length; i++) {				
-                    var node = nodesArray[i];
+            nodesArray.forEach(function(node) {				
                     if (node.classList[0]==="point-handle" || node.classList[0]==="point-rotation") {
                     	node.parentNode.removeChild(node);
                     }
-            }
+            });
             var foreigners = svgToPrint.getElementsByTagName('foreignObject');		
             var foreignersArray = Array.prototype.slice.call(foreigners,0);		
-            for (var i = 0; i < foreignersArray.length; i++) {				
-                var foreign = foreignersArray[i];
+            foreignersArray.forEach(function(foreign) {				
                 foreign.parentNode.removeChild(foreign);				
-            }
+            });
             var texts = svgToPrint.querySelectorAll('.delete');
             var textsArray = Array.prototype.slice.call(texts,0);
-            for (var i=0; i < textsArray.length; i++) {
-                var text = textsArray[i];
+            textsArray.forEach(function(text) {
                 text.parentNode.removeChild(text);
-            }
+            });
             return svgToPrint.innerHTML;
         }
         
@@ -739,10 +743,9 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                 groupSVG = groupRecovered;
                 var images = document.querySelectorAll('.'+group.id);
                 var imagesArray = Array.prototype.slice.call(images,0);
-                for (var i=0; i < imagesArray.length; i++) {
-                    var image = imagesArray[i];
+                imagesArray.forEach(function(image) {
                     image.setAttribute('xlink:href',group.getAttribute('image-source1'));
-                }                
+                });                
             }
             else {
                 id = that.gifName+id;
@@ -780,31 +783,31 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
 		    this.svg = document.getElementById(this.id);
             var groups = document.getElementsByTagName('g'),
             groupsArray = Array.prototype.slice.call(groups,0); 
-            for (var i =0; i < groupsArray.length; i++) {                
-                if (groupsArray[i].id.indexOf(this.flexiName) !== -1) {
-                    this.flexyLine(groupsArray[i].id, null, null, groupsArray[i]);
+            groupsArray.forEach(function(groupItem) {                
+                if (groupItem.id.indexOf(that.flexiName) !== -1) {
+                    that.flexyLine(groupItem.id, null, null, groupsArray[i]);
                 }
                 else  {
-					if (groupsArray[i].id.indexOf(this.analogName) !== -1) {
-                        this.analogBox(groupsArray[i].id, groupsArray[i]);
+					if (groupItem.id.indexOf(that.analogName) !== -1) {
+                        that.analogBox(groupItem.id, groupsArray[i]);
                     }
-                    else if (groupsArray[i].id.indexOf(this.gifName) !== -1) {                        
-                        this.imageEle(groupsArray[i].id, groupsArray[i]);                        
+                    else if (groupItem.id.indexOf(that.gifName) !== -1) {                        
+                        that.imageEle(groupItem.id, groupItem);                        
                     }                     
-                    if (groupsArray[i].transform.baseVal.numberOfItems > 0) {
-                        var element = groupsArray[i].firstChild;
-                        if (groupsArray[i].transform.baseVal.getItem(0).matrix) {
-                            element.dragX = groupsArray[i].transform.baseVal.getItem(0).matrix.e;
-                            element.dragY = groupsArray[i].transform.baseVal.getItem(0).matrix.f;
+                    if (groupItem.transform.baseVal.numberOfItems > 0) {
+                        var element = groupItem.firstChild;
+                        if (groupItem.transform.baseVal.getItem(0).matrix) {
+                            element.dragX = groupItem.transform.baseVal.getItem(0).matrix.e;
+                            element.dragY = groupItem.transform.baseVal.getItem(0).matrix.f;
                         }
                         else {
-                            element.dragX = groupsArray[i].transform.baseVal[0].matrix.e;
-                            element.dragY = groupsArray[i].transform.baseVal[0].matrix.f;
+                            element.dragX = groupItem.transform.baseVal[0].matrix.e;
+                            element.dragY = groupItem.transform.baseVal[0].matrix.f;
                         }
                     }
                 }
-            } 
-            applyTransforms();
+            }); 
+            addGeneralEvents();
 		}
 		
         //Constructor
@@ -830,11 +833,12 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
 	    	var rotcircle = circle(3,0,0, "point-rotation", "#FF9E5E", "0.4", "#000000", "2");
 	    	defs.appendChild(rotcircle);   
 	    	appendChild(defs);
+	    	addGeneralEvents();
         }	
         else {
         	this.refresh();
         }			
-        addGeneralEvents();
+       
 }
 
 
