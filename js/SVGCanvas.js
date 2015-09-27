@@ -616,7 +616,11 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                                 that.removeChild(target.parentNode);                                
                             }
                             else {
-                                that.removeChild(target.parentNode);
+                            	var parentName = target.classList.item(0) || target.class;
+                            	if (parentName !== undefined && parentName !== null && parentName !== "") { 
+                            		var nodeTargetToRemove = document.getElementById(parentName);
+                                	that.removeChild(nodeTargetToRemove);
+                                }
                             }
                         }
                     }
