@@ -823,6 +823,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
             this.svg.setAttribute('height', this.height);
             this.svg.setAttribute('xmlns', svgNS);
             this.svg.setAttribute('xmlns:xlink',xns);
+            this.svg.setAttribute('preserveAspectRatio','xMinYMax meet');
             if (this.container === undefined) { 
                 document.body.appendChild(this.svg);
             }
