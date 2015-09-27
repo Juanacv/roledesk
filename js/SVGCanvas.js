@@ -204,7 +204,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
 		}
 	
 	    function rotateEvent(handleRot, radius, elementCenter) {
-            that.interact(handleRot).draggable({
+            that.interact(handleRot).gestureable = that.interact(handleRot).draggable({
                     onstart: function (event) {
                         var target = document.getElementById(handleRot.getAttribute('data-parent'));
                         if (target.initAngle === null || target.initAngle === undefined) {
@@ -227,7 +227,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                                         
                                     var diffAtan = atan2Point - atan1Point;
                                     var absAngle = Math.abs(diffAtan) * 180/Math.PI;
-                                    if ((diffAtan < 0 &&  absAngle < 180) || (point.y < elementCenter.pageY && ( atan2Point < atan1Point)) || (point.y < elementCenter.pageY && (atan1Point<0 && atan2Point > 0) && (atan2Point > Math.PI/2))) {                                                                                
+                                    if ((diffAtan < 0 &&  absAngle < 180) || (point.y < elementCenter.pageY && ( atan2Point < atan1Point)) || (point.y <= elementCenter.pageY && (atan1Point<0 && atan2Point > 0) && (atan2Point >= Math.PI/2))) {                                                                                
                                         initAngle = (2 * Math.PI) - initAngle;
                                     }                                        
                                     target.initAngle = initAngle;
