@@ -227,7 +227,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                                         
                                     var diffAtan = atan2Point - atan1Point;
                                     var absAngle = Math.abs(diffAtan) * 180/Math.PI;
-                                    if ((diffAtan < 0 &&  absAngle < 180) || (point.y < elementCenter.pageY && ( atan2Point < atan1Point)) || (point.y <= elementCenter.pageY && (atan1Point<0 && atan2Point > 0) && (atan2Point >= Math.PI/2))) {                                                                                
+                                    if ((diffAtan < 0 &&  absAngle < 180) || (point.y < elementCenter.pageY && ( atan2Point < atan1Point)) || (point.y <= elementCenter.pageY && (atan1Point<0 && atan2Point > 0) && (atan2Point >= Math.PI))) {                                                                                
                                         initAngle = (2 * Math.PI) - initAngle;
                                     }                                        
                                     target.initAngle = initAngle;
@@ -674,6 +674,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                 groupSVG = group(id);		
                 groupSVG.setAttribute('data-signal',0);
                 var abox = rect(20,20,110,35,"#FFCC99","1","#000000","2",id+'r');
+                abox.setAttribute('class',groupSVG.id);
                 groupSVG.appendChild(abox);
                                
             }
