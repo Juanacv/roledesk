@@ -242,9 +242,7 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                         centerX = center.x,
                         centerY = center.y;
                             
-                        event.target.x.baseVal.value = event.pageX; 
-                        event.target.y.baseVal.value = event.pageY;  
-						var i = 0, len = parent.points.numberOfItems;
+			var i = 0, len = parent.points.numberOfItems;
                         while (i < len) {
                             var point = parent.points.getItem(i),
                             radiusP = Math.sqrt(Math.pow(centerX-point.x,2)+Math.pow(centerY -point.y,2)),
@@ -265,6 +263,8 @@ function SVGCanvas(interact, width, height, flexiName, analogName, gifName, id, 
                             }
                             i+=1;
                         }
+                        event.target.x.baseVal.value = parent.points.getItem(0).x - (10 * Math.cos(parent.angle));                    
+                        event.target.y.baseVal.value = parent.points.getItem(0).y - (10 * Math.sin(parent.angle)); 
                     },
                     onend  : function (event) {
                     }
